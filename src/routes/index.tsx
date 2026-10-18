@@ -8,7 +8,7 @@ import urinary from "@/assets/slider-urinary-care.png.asset.json";
 import liver from "@/assets/slider-liver-care.png.asset.json";
 import sleep from "@/assets/slider-calm-sleep.png.asset.json";
 import joint from "@/assets/slider-joint-care.png.asset.json";
-import { UNIT_PRICE, PRODUCT_NAME, formatINR, isValidMobile, isValidPin, buildWhatsAppUrl, type OrderDetails } from "@/lib/order";
+import { PRODUCT_NAME, isValidMobile, isValidPin, buildWhatsAppUrl, type OrderDetails } from "@/lib/order";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -197,7 +197,6 @@ function OrderForm() {
   const [busy, setBusy] = useState(false);
   const [opened, setOpened] = useState(false);
   const qty = Math.max(1, Number.parseInt(f.quantity) || 1);
-  const subtotal = UNIT_PRICE * qty;
 
   const set = (k: keyof Form) => (ev: React.ChangeEvent<HTMLInputElement>) => {
     setF((p) => ({ ...p, [k]: ev.target.value }));
@@ -255,16 +254,6 @@ function OrderForm() {
           </div>
         </div>
 
-        <dl className="grid gap-1.5 rounded-2xl bg-cream p-4 text-sm sm:col-span-2">
-          <Row k="પ્રોડક્ટ" v={PRODUCT_NAME} />
-          <Row k="જથ્થો" v={String(qty)} />
-          <Row k="યુનિટ કિંમત" v={formatINR(UNIT_PRICE)} />
-          <Row k="પ્રોડક્ટ સબટોટલ" v={`${formatINR(UNIT_PRICE)} × ${qty} = ${formatINR(subtotal)}`} />
-          <Row k="ડિલિવરી ચાર્જ" v="WhatsApp પર કન્ફર્મ થશે" />
-          <div className="mt-1 flex justify-between border-t border-gold/40 pt-2 text-base font-bold text-primary">
-            <dt>કુલ</dt><dd>{formatINR(subtotal)} + ડિલિવરી</dd>
-          </div>
-        </dl>
 
         <button type="submit" disabled={busy} className="btn-primary h-14 text-base sm:col-span-2">
           <MessageCircle className="h-5 w-5" /> {busy ? "WhatsApp ખોલી રહ્યા છીએ..." : "WhatsApp પર ઓર્ડર કન્ફર્મ કરો"}
@@ -279,9 +268,6 @@ function OrderForm() {
   );
 }
 
-function Row({ k, v }: { k: string; v: string }) {
-  return <div className="flex justify-between gap-3"><dt className="text-muted-foreground">{k}</dt><dd className="text-right font-medium text-foreground">{v}</dd></div>;
-}
 
 function Footer() {
   return (
